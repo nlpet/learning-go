@@ -2,21 +2,25 @@ package main
 
 import "fmt"
 
-func ping(pings chan<- string, msg string) {
-	pings <- msg
+func sendChannel(sent chan<- string, msg string) {
+	sent <- msg
 }
 
-func pong(pings <-chan string, pongs chan<- string) {
-	msg := <-pings
-	pongs <- msg
+func dualChannel(received <-chan string, sent chan<- string) {
+	msg := <-received
+	sent <- msg
 }
 
 func main() {
+	msgs := []string{"first msg", "second msg", "third msg"}
 
-	pings := make(chan string, 1)
-	pongs := make(chan string, 1)
-	ping(pings, "passed msg")
-	pong(pings, pongs)
-	fmt.Println(<-pongs)
+	toSend := make(chan string, len(msgs))
+	toReceive := make(chan string, len(msgs))
+
+	for _, msg := range msgs {
+		sendChannel(toSend, msg)
+		dualChannel(toSend, toReceive)
+		fmt.Println(<-toReceive)
+	}
 
 }
