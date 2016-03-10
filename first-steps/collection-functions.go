@@ -24,6 +24,19 @@ func Indices(vs []string, t string) []int {
 	return indices
 }
 
+func stringIndices(s string, toFind string) []int {
+	var indices []int
+	for i, r := range s {
+		c := string(r)
+		if len(toFind) == 1 && toFind == c {
+			indices = append(indices, i)
+		} else if len(toFind) > 1 && strings.Contains(toFind, c) {
+			indices = append(indices, i)
+		}
+	}
+	return indices
+}
+
 // Include returns true if the target string t is in the slice.
 func Include(vs []string, t string) bool {
 	return Index(vs, t) >= 0
@@ -90,4 +103,5 @@ func main() {
 	fmt.Println(Map(strs, strings.ToUpper))
 
 	fmt.Println(Indices(strs, "apple"))
+	fmt.Println(stringIndices("skyscraper", "sk"))
 }
